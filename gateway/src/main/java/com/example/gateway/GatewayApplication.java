@@ -19,10 +19,14 @@ public class GatewayApplication {
 
     @Bean
     public RouteLocator gatewayRoutes(RouteLocatorBuilder builder) {
-        return builder.routes().route(
-                p -> p.path("/images")
+        return builder.routes()
+                .route(p -> p.path("/images")
                         .filters(f -> f.addRequestHeader("Message", "hihihi"))
-                        .uri("http://localhost:8200")).build();
+                        .uri("http://localhost:8200"))
+                .route(p -> p.path("/users")
+                        .filters(f -> f.addRequestHeader("Message", "hihihi"))
+                        .uri("http://localhost:3000"))
+                .build();
     }
 
 }
