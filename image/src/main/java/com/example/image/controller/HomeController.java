@@ -4,13 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.core.env.Environment;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Project: image
@@ -26,10 +28,13 @@ public class HomeController {
 
     @Autowired
     private Environment env;
+    @Autowired
+    MessageSource messageSource;
 
     @RequestMapping("/")
-    public String home() {
-        return "Hello from Image Service running at port: " + env.getProperty("local.server.port");
+    public String home(@RequestHeader(value = "Accept-Language", required = false) Locale locale) {
+        String message = messageSource.getMessage("hello.message", null, locale);
+            return message + env.getProperty("local.server.port");
     }
 
     @RequestMapping("/images")
@@ -40,6 +45,7 @@ public class HomeController {
                 new Image(3, "The Last Traction Hero", "https://www.imdb.com/title/tt0096697/mediaviewer/rm1445594112"));
         return images;
     }
+
 
     @AllArgsConstructor
     @NoArgsConstructor
